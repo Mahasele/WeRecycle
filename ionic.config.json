@@ -1,0 +1,7 @@
+{
+  "name": "recyclers",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
