@@ -1,0 +1,49 @@
+<ion-menu side="start" [contentId]="mainContent" [menuId]="menuId">
+  <ion-header>
+    <ion-toolbar color="success">
+      <ion-title>
+        Menu
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ul (click)="close()">
+      <li routerLink="dashboard" (click)="go(['admin','dashboard'])">
+        Dashboard
+      </li>
+      <li routerLink="/admin/requests" (click)="go(['admin','requests'])">
+        Requests
+      </li>
+      <li routerLink="/admin/events" (click)="go(['admin','events'])">
+        Events
+      </li>
+      <li routerLink="/admin/dashboard" (click)="go(['admin','feedbacks'])">
+        Feedbacks
+      </li>
+      <li routerLink="/admin/dashboard" (click)="go(['admin','guidelines'])">
+        Guidelines
+      </li>
+      <li routerLink="/admin/dashboard" (click)="go(['admin','tips'])">
+        Tips
+      </li>
+      <li routerLink="/admin/dashboard" (click)="go(['admin','recyclers'])">
+        Recyclers
+      </li>
+      <li routerLink="/admin/users" (click)="go(['admin','users'])">
+        Users
+      </li>
+      <li routerLink="/admin/users" (click)="go(['admin','admins'])">
+        Admins
+      </li>
+      <li routerLink="/admin/profile" (click)="go(['admin','profile'])">
+        Profile
+      </li>
+    </ul>
+    <div>
+      <ion-button color="success" class="ion-margin-horizontal toggle"
+        (click)="logout()" expand="block"> Logout
+      </ion-button>
+    </div>
+  </ion-content>
+</ion-menu>
+

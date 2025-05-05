@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'recyclers',
+  appId: 'io.WeRecycle',
+  appName: 'WeRecycle',
   webDir: 'www'
 };
 

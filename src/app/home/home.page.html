@@ -1,20 +1,58 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-menu side="end" contentId="main-content" menuId="home">
+  <ion-header>
+    <ion-toolbar color="success">
+      <ion-title>
+        Menu
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ul (click)="close()">
+      <li routerLink="/about">
+        About us
+      </li>
+      <li routerLink="/faq">
+        FAQ
+      </li>
+      <li>
+        Contact us
+      </li>
+    </ul>
+  </ion-content>
+</ion-menu>
+<div class="ion-page main" id="main-content">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-no-padding">
+          <ion-icon class="ion-no-padding" color="success" size="large" name="trash"></ion-icon>
+        </ion-col>
+        <ion-col class="ion-no-padding"><ion-title color="success" class="ion-no-padding">We</ion-title></ion-col>
+        <ion-col class="ion-no-padding"><ion-title class="ion-no-padding title">Recycle</ion-title></ion-col>
+      </ion-row>
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+  <ion-content [fullscreen]="true">
+    <div class="hero1">
+      <ion-row class="ion-justify-content-center">
+        <ion-icon size="large" name="trash"></ion-icon>
+        <h2>Recyclers app is a tool dedicated to connect recyclers with trash sellers and provide the with knowledge on how to dispose and recycle waste.
+        </h2>
+        <ion-col>
+          <ion-row>
+            <ion-button (click)="goToSignin()">Sign in</ion-button>
+          </ion-row>
+          <ion-row>
+            <ion-button class="create" (click)="goToRegister()">Create account</ion-button>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+    <app-tasks></app-tasks>
+    <app-testimonials></app-testimonials>
+  </ion-content>
+</div>

@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
+import { FirebaseService } from '../service/firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +11,21 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  constructor(private router: Router, private menu:MenuController,private fService:FirebaseService) { }
+
+  ngOnInit() {
+    this.fService.loading.dismiss()
+  }
+
+  goToRegister() {
+    this.router.navigate(['register'])
+  }
+
+  goToSignin() {
+    this.router.navigate(['dashboard'])
+  }
+  close(){
+    this.menu.close('home')
+  }
 
 }

@@ -1,0 +1,107 @@
+ion-toolbar {
+
+    ion-button {
+        --box-shadow: none;
+        --background: transparent;
+    }
+
+    ion-title {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+}
+
+ion-content {
+    --padding-start: 15px;
+    --padding-end: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+
+    ion-button {
+        --background: var(--ion-color-success);
+        --padding-top: 8px;
+        --padding-bottom: 8px;
+        --padding-start: 15px;
+        --padding-end: 15px;
+        height: 36px;
+        border: none;
+        --border-radius: 30px;
+    }
+
+    .forget {
+        padding: 0;
+        margin: 0px 0 16px;
+        display: block;
+        z-index: 100;
+        width: 100%;
+        text-align: start;
+    }
+
+    ;
+
+    .log {
+        display: flex;
+        justify-content: center;
+        font-size: 64px;
+        margin: 20% 0;
+    }
+
+    ion-text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        font-size: 15px;
+        padding: 8px 15px;
+    }
+
+    ion-list {
+        height: fit-content;
+        background-color: transparent;
+        ion-col {
+            ion-row {
+                flex-grow: 0;
+
+                ion-input {
+                    color:#000;
+                    --padding-top: 8px;
+                    --padding-bottom: 8px;
+                    --padding-start: 15px;
+                    --padding-end: 15px;
+                    --background: rgba(128, 128, 128, 0.342);
+                    height: 36px;
+                    width: 100vw;
+                    --border-radius: 30px;
+                    font-size: 1em;
+                    --highlight-height: 0;
+                }
+
+                div {
+                    background-color: rgba(196, 58, 58, 0.411);
+                    margin-top: 4px;
+                    padding: 5px 15px;
+                    width: 100%;
+                    text-align: center;
+                    border-radius: 25px;
+
+                    ion-text {
+                        font-size: 15px;
+                        padding: 0;
+                    }
+                }
+            }
+
+
+        }
+    }
+
+}
+form{
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 15px;
+}

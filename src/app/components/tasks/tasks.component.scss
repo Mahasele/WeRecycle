@@ -1,0 +1,24 @@
+.task {
+    h3 {
+        font-size: 24px;
+        text-align: center;
+        text-decoration: underline;
+        color: var(--ion-color-success);
+        font-weight: 600;
+    }
+
+    .task-wrap {
+        ion-card {
+            margin-bottom: 10px;
+
+            ion-icon {
+                font-size: 40px;
+            }
+
+            ion-card-subtitle {
+                font-size: 18px;
+                padding: 0 10px;
+            }
+        }
+    }
+}

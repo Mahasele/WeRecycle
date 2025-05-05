@@ -1,0 +1,132 @@
+import { FirebaseService } from 'src/app/service/firebase.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-stats',
+  templateUrl: './stats.page.html',
+  styleUrls: ['./stats.page.scss'],
+  standalone:false
+})
+export class StatsPage implements OnInit {
+  donationCenters = [
+    {
+      name: 'Maseru Private Hospital',
+      address: 'Ha Thetsane, Maseru',
+      distance: 2.5,
+    },
+    {
+      name: 'Queen Mamohato Memorial Hospital',
+      address: 'Kingsway road, Maseru',
+      distance: 4.1,
+    },
+    // Add more donation centers
+  ];
+  guides:any = []
+  tips:any = []
+  user:any = {}
+  requests:{
+    total:Number,
+    pending:Number,
+    approved:Number,
+    cancelled:Number
+  } ={
+    total:0,
+    pending:0,
+    approved:0,
+    cancelled:0
+  }
+  constructor(private fService: FirebaseService,private nav :Router) { 
+  }
+
+  ngOnInit() {
+    this.fService.auth.onAuthStateChanged((user)=>{
+      let id = user?.uid || ''
+      if(!id){
+        this.nav.navigate(['login'],{replaceUrl:true})
+        return
+      }
+      this.fService.getUser(id).subscribe(userData=>{
+        
+        this.user =userData
+        if (userData && userData.registerType==='admin') {
+          this.nav.navigate(['admin','dashboard'],{replaceUrl:true})
+          return
+        }
+        
+      })
+      this.fService.getRequests().subscribe(reqs=>{
+        let userRequests =reqs.filter(req=>req.userId===user?.uid)
+        this.requests={
+          total:userRequests.length,
+          pending:userRequests.filter(req=>req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()).length,
+          approved:userRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()).length,
+          cancelled:userRequests.filter(req=>req.status==='cancelled').length,
+        }
+      })
+    })
+    this.getGuidelines()
+    this.getTips()
+    this.fService.loading.dismiss()
+  }
+  getGuidelines(){
+  this.fService.getGuidelines().subscribe(guides=>{
+    this.guides = []
+    if (guides.length > 0) {
+      if (guides.length>1) {
+        guides.slice(0,1).map(guide=>{
+        let name
+        this.fService.getUser(guide.userId).subscribe(user=>{
+          name = user.company
+          this.guides.push({...guide,name}) 
+        })
+        return {...guide}
+      })
+      } else {
+       guides.map(guide=>{
+
+        let name
+        this.fService.getUser(guide.userId).subscribe(user=>{
+          name = user.company
+          this.guides.push({...guide,name}) 
+        })
+        return {...guide}
+      }) 
+      }
+      
+    }
+  })
+  }
+  getTips(){
+  this.fService.getTips().subscribe(tips=>{
+    this.tips = []
+    if (tips.length > 0) {
+      if (tips.length>1) {
+        tips.slice(0,1).map(tip=>{
+        let name
+        this.fService.getUser(tip.userId).subscribe(user=>{
+          name = user.company
+          this.tips.push({...tip,name,createdAt:new Date(tip.createdAt.seconds*1000).toDateString()}) 
+        })
+        return {...tip}
+      })
+      } else {
+       tips.map(tip=>{
+        let name
+        this.fService.getUser(tip.userId).subscribe(user=>{
+          name = user.company
+          
+          this.guides.push({...tip,name,createdAt:new Date(tip.createdAt.seconds*1000).toDateString()}) 
+        })
+        return {...tip}
+      }) 
+      }
+      
+    }
+  })
+  }
+  logout() {
+    this.fService.logout()
+  }
+
+}

@@ -1,0 +1,68 @@
+import { FirebaseService } from 'src/app/service/firebase.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+
+@Component({
+  selector: 'app-events',
+  templateUrl: './events.page.html',
+  styleUrls: ['./events.page.scss'],
+  standalone:false
+})
+export class EventsPage implements OnInit {
+
+  eventForm:FormGroup
+  id
+  dateRestricter
+  
+  user:any={}
+  constructor(private formBuilder: FormBuilder, private nav: Router,private alertCrl: AlertController,private fService:FirebaseService) {
+    this.eventForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      eventDate: ['', Validators.required],
+      eventLocation: ['', Validators.required],
+    });
+    this.dateRestricter = new Date().toString()
+
+    this.id = this.nav.url.slice(0, this.nav.url.lastIndexOf('/')).slice(this.nav.url.slice(0, this.nav.url.lastIndexOf('/')).lastIndexOf('/') + 1)
+    let f = new Intl.DateTimeFormat('en-Us', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date()).split(' ')
+    console.log(f)
+    let year = f[0].split('/')[2] , month =f[0].split('/')[0], day = f[0].split('/')[1]
+    
+    let d = year+ '-' + month + '-' +day 
+
+    this.dateRestricter = d.replace(',', '') + 'T' + f[1]
+    console.log(this.dateRestricter)
+    // if (this.id) {
+    //   this.fireService.getUser(this.id).subscribe(data => {
+    //     this.user = data
+    //   })
+    // }
+  }
+  ngOnInit() {
+    this.fService.auth.onAuthStateChanged((user)=>{
+      this.fService.loading.create().then((loading: any) => loading.present())
+      let id = user?.uid || ''
+      if(!id){
+        this.fService.loading.dismiss()
+        this.nav.navigate(['login'],{replaceUrl:true})
+        return
+      }
+
+      this.fService.getUser(id).subscribe(userData=>{
+        this.user =userData
+        
+        //console.log('user',userData)
+        this.fService.loading.dismiss()
+      })
+    })
+  }
+ onSubmit(){
+  if (this.eventForm.valid) {
+    this.fService.createEvent({...this.eventForm.value,host:this.user.registerType==='user'?`${this.user.name} ${this.user.name}`: this.user.company},this.user?.id)
+    this.eventForm.reset()
+  }
+ }
+
+}

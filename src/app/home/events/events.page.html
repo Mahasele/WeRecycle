@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Events</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+    <ion-grid class="ion-margin-top">
+      <ion-row>
+        <ion-col size="12">
+          <ion-label>Event title</ion-label>
+          <ion-input formControlName="title" placeholder="Title" type="text" required></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item lines="none">
+            <ion-label>Event date</ion-label><br>
+          </ion-item>
+          <ion-item>
+            <ion-datetime [min]="dateRestricter" formControlName="eventDate" required></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-label>Location</ion-label>
+          <ion-input formControlName="eventLocation" placeholder="Location" type="text" required></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" [disabled]="eventForm.invalid" expand="block">Create event</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

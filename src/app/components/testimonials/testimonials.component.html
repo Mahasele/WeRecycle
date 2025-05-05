@@ -1,0 +1,23 @@
+<div>
+  <ion-title color="success">Testimonials</ion-title>
+  <swiper-container
+  #swiper
+(slidechange)="swiperSlideChanged($event)"
+  [loop]="true"
+  [pagination]="true"
+  (afterinit)="swiperReady()"
+  speed="500"
+  slide-per-view="1"
+>
+  <swiper-slide *ngFor="let testimony of testimonies">
+    <div class="testimony-container" style="width:100%">
+      <h3>{{ testimony.name }}</h3>
+      <p>{{ testimony.comments }}</p>
+      <div>
+        <ion-icon name="star" [color]="i<testimony.rating&&'success'" size="large" *ngFor="let star of raingStars;let i = index"></ion-icon>
+      </div>
+    </div>
+  </swiper-slide>
+</swiper-container>
+</div>
+

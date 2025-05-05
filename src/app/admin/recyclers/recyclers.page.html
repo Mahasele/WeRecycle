@@ -1,0 +1,121 @@
+<app-toolbar [mainContent]="'main-content'"></app-toolbar>
+<div class="ion-page main" id="main-content">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>Recyclers</ion-title>
+      <ion-buttons slot="end">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content [fullscreen]="true">
+    <form [formGroup]="form" (submit)="register()">
+      <ion-list>
+        <h2>Register Recycler</h2>
+        <ion-item class="ion-no-padding ion-no-margin">
+          <ion-col>
+            <ion-row class="ion-justify-content-center ion-align-items-center">
+              <ion-col class="ion-justify-content-center">
+                <ion-label>Allowed Materials</ion-label>
+              </ion-col>
+              <ion-col>
+                <ion-select formControlName="materials" multiple>
+                  <ion-select-option [value]="material" *ngFor="let material of materials">
+                    {{material}}
+                  </ion-select-option>
+                </ion-select>
+              </ion-col>
+
+            </ion-row>
+            
+          </ion-col>
+        </ion-item>
+        <ion-col >
+          <ion-row>
+            <ion-input formControlName="company" placeholder="Recycler Company" type="text" required></ion-input>
+          </ion-row>
+          <ion-row>
+            <div *ngIf="form.get('company')?.errors?.['required'] && form.get('company')?.touched">
+              <ion-text color="danger">Recycler company is required.</ion-text>
+            </div>
+          </ion-row>
+        </ion-col>
+
+        <ion-col>
+          <ion-row>
+            <ion-input type="email" formControlName="email" placeholder="Email" required></ion-input>
+          </ion-row>
+          <ion-row>
+            <div *ngIf="form.get('email')?.errors?.['required'] && form.get('email')?.touched">
+              <ion-text color="danger">Please enter email.</ion-text>
+            </div>
+            <div *ngIf="form.get('email')?.errors?.['email'] && form.get('email')?.touched">
+              <ion-text color="danger">Please enter a valid email.</ion-text>
+            </div>
+          </ion-row>
+        </ion-col>
+        <ion-col>
+          <ion-row>
+            <ion-input type="tel" formControlName="contact" placeholder="Contact number" required></ion-input>
+          </ion-row>
+          <ion-row>
+            <div *ngIf="form.get('contact')?.errors?.['required'] && form.get('contact')?.touched">
+              <ion-text color="danger">Please enter contact number.</ion-text>
+            </div>
+            <div *ngIf="form.get('contact')?.errors?.['pattern'] && form.get('contact')?.touched">
+              <ion-text color="danger">Invalid contact number.</ion-text>
+            </div>
+          </ion-row>
+        </ion-col>
+        <ion-col>
+          <ion-row>
+            <ion-input type="text" formControlName="days" placeholder="Operating days(Monday - Friday)" required></ion-input>
+          </ion-row>
+          <ion-row>
+            <div *ngIf="form.get('days')?.errors?.['required'] && form.get('days')?.touched">
+              <ion-text color="danger">Please enter open time.</ion-text>
+            </div>
+          </ion-row>
+        </ion-col>
+        <ion-col>
+          <ion-row>
+            <ion-input type="text" formControlName="openTime" placeholder="Working hours(08:00 - 17:00)" required></ion-input>
+          </ion-row>
+          <ion-row>
+            <div *ngIf="form.get('openTime')?.errors?.['required'] && form.get('openTime')?.touched">
+              <ion-text color="danger">Please enter open time.</ion-text>
+            </div>
+          </ion-row>
+        </ion-col>
+        <ion-col>
+          <ion-row>
+            <ion-input type="text" formControlName="location" placeholder="Location" required></ion-input>
+          </ion-row>
+          <ion-row>
+            <div *ngIf="form.get('location')?.errors?.['required'] && form.get('location')?.touched">
+              <ion-text color="danger">Please enter location.</ion-text>
+            </div>
+          </ion-row>
+        </ion-col>
+        <ion-col>
+          <ion-row>
+            <ion-input type="password" formControlName="password" placeholder="New Password" required>
+              <ion-input-password-toggle *ngIf="form.get('password')?.value" slot="end"
+                color="success"></ion-input-password-toggle>
+            </ion-input>
+          </ion-row>
+          <ion-row>
+            <div *ngIf="form.get('password')?.errors?.['required'] && form.get('password')?.touched">
+              <ion-text color="danger">Please enter password.</ion-text>
+            </div>
+            <div *ngIf="form.get('password')?.errors?.['minlength'] && form.get('password')?.touched">
+              <ion-text color="danger">Password must be at least 8 characters long.</ion-text>
+            </div>
+          </ion-row>
+        </ion-col>
+      </ion-list>
+      <ion-button expand="block" type="submit" [disabled]="form.invalid">register</ion-button>
+    </form>
+
+  </ion-content>
+</div>

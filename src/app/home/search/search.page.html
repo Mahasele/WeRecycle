@@ -1,0 +1,117 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="success">
+    <ion-title>Request Recycling</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="searchForm">
+    <ion-searchbar 
+      formControlName="location"
+      color="medium" 
+      class="ion-margin-top" 
+      placeholder="Search Nearby Location"
+      [debounce]="1000" 
+      (ionInput)="handleInput($event,'input')"
+      >
+    </ion-searchbar>
+    <div class="ion-padding ion-no-margin">
+     <ion-item class="ion-no-padding ion-no-margin">
+      <ion-col>
+        <ion-row class="ion-justify-content-center ion-align-items-center">
+          <ion-col class="ion-justify-content-center">
+            <ion-label>Allowed Materials</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-select formControlName="materials" multiple (ionChange)="handleInput($event,'select')">
+              <ion-select-option [value]="material" *ngFor="let material of materials">
+                {{material}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+    
+        </ion-row>
+        
+      </ion-col>
+      
+    </ion-item> 
+    
+    <ion-list *ngIf="searchForm.get('location')?.value || searchForm.get('materials')?.value?.length>0">
+        <ion-item *ngFor="let loc of results" class="ion-margin-bottom" >
+          <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
+            <ion-col size="11">
+              <ion-label>
+                <h3>Location: {{ loc.location }}</h3>
+                <p>Company: {{ loc.company }}</p>
+                <p>Open time: {{ loc.openTime }}</p>
+
+              </ion-label>
+            </ion-col>
+            <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-col>
+          </ion-row>
+      
+        </ion-item>
+      </ion-list>
+      </div>
+  </form>
+  <form [formGroup]="form" class="ion-padding-horizontal" (ngSubmit)="handleSubmit()">
+    <ion-item class="ion-no-padding ion-no-margin">
+      <ion-col>
+        <ion-row class="ion-justify-content-center ion-align-items-center">
+          <ion-col class="ion-justify-content-center">
+            <ion-label>Select location</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-select formControlName="location" (ionChange)="handleMaterial($event)">
+              <ion-select-option [value]="recycler.id" *ngFor="let recycler of recyclers">
+                {{recycler.location}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+    
+        </ion-row>
+    
+      </ion-col>
+    
+    </ion-item>
+    <ion-item class="ion-no-padding ion-no-margin">
+      <ion-col>
+        <ion-row class="ion-justify-content-center ion-align-items-center">
+          <ion-col class="ion-justify-content-center">
+            <ion-label>Select material</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-select formControlName="materials" multiple>
+              <ion-select-option [value]="material" *ngFor="let material of location?.materials">
+                {{material}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+    
+        </ion-row>
+    
+      </ion-col>
+    
+    </ion-item>
+    
+    <ion-row>
+      <ion-col size="12">
+        <ion-item lines="none">
+          <ion-label>Recycling date</ion-label><br>
+        </ion-item>
+    
+        <ion-item>
+          <ion-datetime [min]="dateRestricter" formControlName="requestDate" required></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button type="submit" [disabled]="form.invalid" color="success" expand="block">Submit</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+  
+</ion-content>

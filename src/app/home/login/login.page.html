@@ -1,0 +1,50 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="success">
+    <ion-button slot="start" class="ion-no-padding ion-no-margin">
+      <ion-back-button defaultHref="home" class="ion-no-padding ion-no-margin">
+      </ion-back-button>
+    </ion-button>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="log"><ion-icon color="success" name="trash"></ion-icon></div>
+  <form [formGroup]="loginForm" (submit)="onSubmit()">
+    <ion-list class="ion-no-padding ion-no-margin">
+      <ion-col class="ion-no-padding ion-no-margin">
+        <ion-row>
+          <ion-input type="email" formControlName="email" placeholder="Email" required></ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched">
+            <ion-text color="danger">Please enter email.</ion-text>
+          </div>
+          <div *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched">
+            <ion-text color="danger">Please enter a valid email.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-input type="password" formControlName="password" placeholder="Password" required>
+            <ion-input-password-toggle *ngIf="loginForm.get('password')?.value" slot="end" color="success"></ion-input-password-toggle>
+          </ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched">
+            <ion-text color="danger">Please enter password.</ion-text>
+          </div>
+          <div *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched">
+            <ion-text color="danger">Password must be at least 8 characters long.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+    </ion-list>
+    <ion-text color="primary" class="forget" (click)="resetPassword()">Forget password</ion-text>
+    <ion-button expand="block" type="submit" [disabled]="loginForm.invalid">Login</ion-button>
+    <ion-text color="medium">Haven't have signed up, sign up <ion-icon color="success"
+        name="arrow-down"></ion-icon></ion-text>
+    <ion-button expand="block" (click)="goToSignUp()" type="button">Sign up</ion-button>
+  </form>
+</ion-content>
+

@@ -1,0 +1,103 @@
+<app-toolbar [mainContent]="'requests'" [mainContent]="'dashboard'" [menuId]="'requestId'"></app-toolbar>
+<div class="ion-page main" id="requests">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>Requests</ion-title>
+      <ion-buttons slot="end">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <ion-segment value="all" [scrollable]="true" class="ion-margin-top" color="success">
+      <ion-segment-button value="all" contentId="all">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="pending" contentId="pending">
+        <ion-label>Pending</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="approved" contentId="approved" >
+        <ion-label>Approved</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="cancelled" contentId="cancelled">
+        <ion-label>Cancelled</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <ion-segment-view>
+      <ion-segment-content id="all">
+        <ion-card class="ion-padding" *ngFor="let req of requests.all">
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              <ion-card-header class="ion-no-padding"> Requested by: {{'Holo'}}</ion-card-header>
+              <ion-card-subtitle class="ion-no-padding">{{"Recycling Company: "+req.recycler.company}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Location: {{req.recycler.location ||
+                'Qoaling'}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Date: {{req?.requestDate}}</ion-card-subtitle>
+            </ion-col>
+            <div class="line"></div>
+            <ion-row class="ion-justify-content-start">
+              <ion-button expand="block" color="danger" (click)="changeStatus(req.id,'cancelled')">Cancel</ion-button>
+              <ion-button expand="block" color="success" (click)="changeStatus(req.id,'approved')">Approve</ion-button>
+            </ion-row>
+          </ion-col>
+        </ion-card>
+      </ion-segment-content>
+      <ion-segment-content id="pending">
+        <ion-card class="ion-padding" *ngFor="let req of requests.pending">
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              <ion-card-header class="ion-no-padding"> Requested by: {{'Holo'}}</ion-card-header>
+              <ion-card-subtitle class="ion-no-padding">{{"Recycling Company: "+req.recycler.company}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Location: {{req.recycler.location ||
+                'Qoaling'}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Date: {{req?.requestDate}}</ion-card-subtitle>
+            </ion-col>
+            <div class="line"></div>
+            <ion-row class="ion-justify-content-start">
+              <ion-button expand="block" color="danger" (click)="changeStatus(req.id,'cancelled')">Cancel</ion-button>
+              <ion-button expand="block" color="success" (click)="changeStatus(req.id,'approved')">Approve</ion-button>
+            </ion-row>
+          </ion-col>
+        </ion-card>
+      </ion-segment-content>
+      <ion-segment-content id="approved">
+        <ion-card class="ion-padding" *ngFor="let req of requests.approved">
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              <ion-card-header class="ion-no-padding"> Requested by: {{'Holo'}}</ion-card-header>
+              <ion-card-subtitle class="ion-no-padding">{{"Recycling Company: "+req.recycler.company}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Location: {{req.recycler.location ||
+                'Qoaling'}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Date: {{req?.requestDate}}</ion-card-subtitle>
+            </ion-col>
+            <div class="line"></div>
+            <ion-row class="ion-justify-content-start">
+              <ion-button expand="block" color="danger" (click)="changeStatus(req.id,'cancelled')">Cancel</ion-button>
+              <ion-button expand="block" color="success" (click)="changeStatus(req.id,'approved')">Approve</ion-button>
+            </ion-row>
+          </ion-col>
+        </ion-card>
+      </ion-segment-content>
+      <ion-segment-content id="cancelled">
+        <ion-card class="ion-padding" *ngFor="let req of requests.cancelled">
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              <ion-card-header class="ion-no-padding"> Requested by: {{'Holo'}}</ion-card-header>
+              <ion-card-subtitle class="ion-no-padding">{{"Recycling Company: "+req.recycler.company}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Location: {{req.recycler.location ||
+                'Qoaling'}}</ion-card-subtitle>
+              <ion-card-subtitle class="ion-no-padding">Date: {{req?.requestDate}}</ion-card-subtitle>
+            </ion-col>
+            <div class="line"></div>
+            <ion-row class="ion-justify-content-start">
+              <ion-button expand="block" color="danger" (click)="changeStatus(req.id,'cancelled')">Cancel</ion-button>
+              <ion-button expand="block" color="success" (click)="changeStatus(req.id,'approved')">Approve</ion-button>
+            </ion-row>
+          </ion-col>
+        </ion-card>
+      </ion-segment-content>
+    </ion-segment-view>
+  </ion-content>
+</div>
+

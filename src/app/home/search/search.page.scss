@@ -1,0 +1,17 @@
+ion-toolbar {
+    ion-button {
+        --box-shadow: none;
+        --background: transparent;
+    }
+
+    ion-title {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+}
+ion-content {
+    ion-searchbar{
+        --border-radius:5px;
+    }
+}

@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="success">
+    <ion-button color="success" slot="start" class="ion-no-padding ion-no-margin">
+      <ion-back-button  [defaultHref]="'dashboard/stats'" class="ion-no-padding ion-no-margin">
+      </ion-back-button>
+    </ion-button>
+    <ion-title>Feedback</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  
+  <form (ngSubmit)="onSubmit()" [formGroup]="feedbackForm">
+  
+    <ion-title class="ion-text-center" color="success">Feedback</ion-title>
+    
+    <ion-textarea placeholder="Comments" formControlName="comments"></ion-textarea>
+    <ion-select label="Ratings" formControlName="rating" interface="action-sheet" justify="space-between" fill="outline">
+      <ion-select-option [value]="rating" *ngFor="let rating of ratings">{{rating}}</ion-select-option>
+    </ion-select>
+    <ion-button type="submit" expand="block" color="success" [disabled]="feedbackForm.invalid">Submit Feedback</ion-button>
+  </form>
+</ion-content>
