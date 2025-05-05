@@ -105,13 +105,23 @@
           </div>
         </ion-row>
       </ion-col>
-      <ion-col>
+      <ion-col *ngIf="user.registerType==='recycler'">
         <ion-row>
-          <ion-input type="text" formControlName="openTime" placeholder="Open time(08:00 - 17:00)" required></ion-input>
+          <ion-input type="text" formControlName="days" placeholder="Operating days(Monday- Friday)" required></ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('days')?.errors?.['required'] && form.get('days')?.touched">
+            <ion-text color="danger">Please enter operating days.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col *ngIf="user.registerType==='recycler'">
+        <ion-row>
+          <ion-input type="text" formControlName="openTime" placeholder="Operating time(08:00 - 17:00)" required></ion-input>
         </ion-row>
         <ion-row>
           <div *ngIf="form.get('openTime')?.errors?.['required'] && form.get('openTime')?.touched">
-            <ion-text color="danger">Please enter open time.</ion-text>
+            <ion-text color="danger">Please enter operating hours.</ion-text>
           </div>
         </ion-row>
       </ion-col>
@@ -153,6 +163,6 @@
         </ion-row>
       </ion-col>
     </ion-list>
-    <ion-button expand="block" type="submit" [disabled]="form.invalid">Change</ion-button>
+    <ion-button expand="block" type="submit" [disabled]="passwordForm.invalid">Change</ion-button>
   </form>
 </ion-content>

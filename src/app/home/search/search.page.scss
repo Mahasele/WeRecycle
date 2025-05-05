@@ -14,4 +14,13 @@ ion-content {
     ion-searchbar{
         --border-radius:5px;
     }
+    .toggle {
+        --background: transparent;
+        border: 2px solid var(--ion-color-success);
+        border-radius: 30px;
+        color: #fff;
+        --box-shadow: none;
+        margin-top: 24px;
+        margin-bottom: 18px;
+    }
 }

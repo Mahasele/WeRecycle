@@ -20,6 +20,18 @@ export class SearchPage implements OnInit {
   dateRestricter:string=''
   location:any={}
   user:any={}
+  requests:{
+    all:any[],
+    pending:any[],
+    approved:any[],
+    cancelled:any[]
+  } ={
+    all:[],
+    pending:[],
+    approved:[],
+    cancelled:[]
+  }
+  show = true
   constructor(private builder:FormBuilder, private fService: FirebaseService, private nav:Router) {
     this.form = this.builder.group({
       location: ['', Validators.required],
@@ -34,19 +46,51 @@ export class SearchPage implements OnInit {
    }
 
   ngOnInit() {
-    this.fService.auth.onAuthStateChanged((user)=>{
-      let id = user?.uid || ''
-      if(!id){
-        this.fService.loading.dismiss()
-        this.nav.navigate(['login'],{replaceUrl:true})
-        return
-      }
-      this.fService.getUser(id).subscribe(userData=>{
-        this.user =userData
-        console.log('user',userData)
+    this.fService.loading.create().then((loading: any) => {
+        loading.present()
+        this.fService.auth.onAuthStateChanged((user)=>{
+          let id = user?.uid || ''
+          if(!id){
+            loading.dismiss()
+            this.fService.loading.dismiss()
+            this.nav.navigate(['login'],{replaceUrl:true})
+            return
+          }
+          this.fService.getUser(id).subscribe(userData=>{
+            this.user =userData
+            loading.dismiss()
+            this.fService.loading.dismiss()
+          })
+          this.fService.getRequests().subscribe(reqs=>{
+            this.requests ={
+              all:[],
+              pending:[],
+              approved:[],
+              cancelled:[]
+            }
+            reqs.filter(userReq=>userReq.userId===user?.uid).map(req=>{
+              this.fService.getUser(req.userId).subscribe(user=>{
+                this.fService.getUser(req.recyclerId).subscribe(recycler=>{
+                this.requests.all.push({...req,user,recycler})
+                if (req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()) {
+                  this.requests.pending.push({...req,user,recycler})
+                }
+                if (req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()) {
+                  this.requests.approved.push({...req,user,recycler})
+                }
+                if (req.status==='cancelled') {
+                  this.requests.cancelled.push({...req,user,recycler})
+                }
+                  
+                })
+              })
+            })
+            
+          })
+        })
+        loading.dismiss()
         this.fService.loading.dismiss()
       })
-    })
     this.dateRestricter = new Date().toString()
     let f = new Intl.DateTimeFormat('en-Us', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date()).split(' ')
     let d = f[0].split('/')[2] + '-' + f[0].split('/')[0] + '-' + f[0].split('/')[1]
@@ -88,5 +132,8 @@ export class SearchPage implements OnInit {
     }
     this.fService.createRequest(data,this.user.id)
     this.form.reset()
+  }
+  changeShow() {
+    this.show = !this.show
   }
 }

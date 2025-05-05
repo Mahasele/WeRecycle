@@ -37,10 +37,18 @@
 @import "@ionic/angular/css/palettes/dark.system.css";
 ion-toolbar {
     --background: var(--ion-color-success);
+    padding: 15px 0; 
 
     ion-title {
         color: #ffffff;
         font-size: 1.5rem;
         font-weight: bold;
     }
+}
+.line {
+    width: 100%;
+    height: 2px;
+    background-color: var(--ion-color-success);
+    margin-top: 8px;
+    margin-bottom: 4px;
 }

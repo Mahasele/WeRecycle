@@ -31,8 +31,12 @@ export class LoginPage implements OnInit{
       if (this.loginForm.invalid) {
         return;
       }
+      const loading = await this.fService.loading.create()
+      loading.present()
       await this.fService.loginFireAuth(this.loginForm.value)
       this.loginForm.reset();
+      loading.dismiss()
+      this.fService.loading.dismiss()
   }
   goToSignUp() {
     this.nav.navigate(["register"])

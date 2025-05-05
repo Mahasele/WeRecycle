@@ -22,43 +22,52 @@ export class RequestsPage implements OnInit {
     cancelled:[]
   }
   constructor(private fService: FirebaseService,private nav :Router) { 
-      this.fService.loading.create().then((loading: any) => loading.present())
+      
     }
   
     ngOnInit() {
-      this.fService.auth.onAuthStateChanged((user)=>{
-        let id = user?.uid || ''
-        if(!id){
-          this.fService.loading.dismiss()
-          this.nav.navigate(['login'],{replaceUrl:true})
-          return
-        }
-        this.fService.getUser(id).subscribe(userData=>{
-          this.user =userData
-          this.fService.loading.dismiss()
-        })
-        this.fService.getRequests().subscribe(reqs=>{
-          reqs.map(req=>{
-            this.fService.getUser(req.userId).subscribe(user=>{
-              this.fService.getUser(req.recyclerId).subscribe(recycler=>{
-              this.requests.all.push({...req,user,recycler})
-              if (req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()) {
-                this.requests.pending.push({...req,user,recycler})
-              }
-              if (req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()) {
-                this.requests.approved.push({...req,user,recycler})
-              }
-              if (req.status==='cancelled') {
-                this.requests.cancelled.push({...req,user,recycler})
-              }
-                
+      this.fService.loading.create().then((loading: any) => {
+        loading.present()
+        this.fService.auth.onAuthStateChanged((user)=>{
+          let id = user?.uid || ''
+          if(!id){
+            this.fService.loading.dismiss()
+            this.nav.navigate(['login'],{replaceUrl:true})
+            return
+          }
+          this.fService.getUser(id).subscribe(userData=>{
+            this.user =userData
+            this.fService.loading.dismiss()
+          })
+          this.fService.getRequests().subscribe(reqs=>{
+            this.requests ={
+              all:[],
+              pending:[],
+              approved:[],
+              cancelled:[]
+            }
+            reqs.map(req=>{
+              this.fService.getUser(req.userId).subscribe(user=>{
+                this.fService.getUser(req.recyclerId).subscribe(recycler=>{
+                this.requests.all.push({...req,user,recycler})
+                if (req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()) {
+                  this.requests.pending.push({...req,user,recycler})
+                }
+                if (req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()) {
+                  this.requests.approved.push({...req,user,recycler})
+                }
+                if (req.status==='cancelled') {
+                  this.requests.cancelled.push({...req,user,recycler})
+                }
+                  
+                })
               })
             })
+            
           })
-          
         })
+        this.fService.loading.dismiss()
       })
-      this.fService.loading.dismiss()
     }
     changeStatus(requestId:string,status:string){
       this.fService.changeStatusRequest(requestId,status)

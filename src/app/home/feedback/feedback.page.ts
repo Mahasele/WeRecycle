@@ -21,9 +21,17 @@ export class FeedbackPage implements OnInit {
    }
 
   ngOnInit() {
-    this.fService.auth.onAuthStateChanged(user=>{
+    this.fService.loading.create().then(load=>{
+      load.present()
+      this.fService.auth.onAuthStateChanged(user=>{
+
       this.user = user
+      this.fService.loading.dismiss()
     })
+    load.dismiss()
+    this.fService.loading.dismiss()
+    })
+    this.fService.loading.dismiss()
   }
 
   onSubmit() {

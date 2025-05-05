@@ -42,20 +42,26 @@ export class EventsPage implements OnInit {
   }
   ngOnInit() {
     this.fService.auth.onAuthStateChanged((user)=>{
-      this.fService.loading.create().then((loading: any) => loading.present())
-      let id = user?.uid || ''
-      if(!id){
-        this.fService.loading.dismiss()
-        this.nav.navigate(['login'],{replaceUrl:true})
-        return
-      }
+      this.fService.loading.create().then((loading) => {
+        loading.present()
+      
+        let id = user?.uid || ''
+        if(!id){
+          this.fService.loading.dismiss()
+          loading.dismiss()
+          this.nav.navigate(['login'],{replaceUrl:true})
+          return
+        }
 
-      this.fService.getUser(id).subscribe(userData=>{
-        this.user =userData
-        
-        //console.log('user',userData)
-        this.fService.loading.dismiss()
+        this.fService.getUser(id).subscribe(userData=>{
+          this.user =userData
+          
+          //console.log('user',userData)
+          loading.dismiss()
+          this.fService.loading.dismiss()
+        })
       })
+      
     })
   }
  onSubmit(){

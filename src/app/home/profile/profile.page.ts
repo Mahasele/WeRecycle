@@ -24,6 +24,7 @@ export class ProfilePage implements OnInit {
       surname: ['', Validators.required],
       location: ['', Validators.required],
       openTime: ['', Validators.required],
+      days: ['', Validators.required],
       materials: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       registerType: [''],
@@ -35,7 +36,6 @@ export class ProfilePage implements OnInit {
       password: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
     });
-    this.fService.loading.dismiss()
   }
   ngOnInit(): void {
     this.form.get('registerType')?.valueChanges.subscribe(() => {
@@ -44,6 +44,8 @@ export class ProfilePage implements OnInit {
         this.form.get('company')?.updateValueAndValidity()
         this.form.get('openTime')?.clearValidators()
         this.form.get('openTime')?.updateValueAndValidity()
+        this.form.get('days')?.clearValidators()
+        this.form.get('days')?.updateValueAndValidity()
         this.form.get('materials')?.clearValidators()
         this.form.get('materials')?.updateValueAndValidity()
         this.form.get('name')?.setValidators(Validators.required)
@@ -63,6 +65,8 @@ export class ProfilePage implements OnInit {
         this.form.get('materials')?.updateValueAndValidity()
         this.form.get('openTime')?.setValidators(Validators.required)
         this.form.get('openTime')?.updateValueAndValidity()
+        this.form.get('days')?.setValidators(Validators.required)
+        this.form.get('days')?.updateValueAndValidity()
         this.form.updateValueAndValidity()
       }
     })
@@ -77,23 +81,27 @@ export class ProfilePage implements OnInit {
 
   info(){
     this.fService.auth.onAuthStateChanged((user)=>{
-      this.fService.loading.create().then((loading: any) => loading.present())
-      let id = user?.uid || ''
-      this.fService.getUser(id).subscribe(userData=>{
-        this.user =userData
-        this.form.get('email')?.setValue(userData?.email)
-        this.form.get('registerType')?.setValue(userData?.registerType)
-        this.form.get('company')?.setValue(userData?.company)
-        this.form.get('location')?.setValue(userData?.location)
-        this.form.get('contact')?.setValue(userData?.contact)
-        this.form.get('name')?.setValue(userData?.name)
-        this.form.get('surname')?.setValue(userData?.surname)
-        this.form.get('openTime')?.setValue(userData?.openTime)
-        this.form.get('materials')?.setValue(userData?.materials)
-        //this.form.get('surname')?.setValue(userData?.surname)
-        //console.log('user',userData)
-        this.fService.loading.dismiss()
+      this.fService.loading.create().then((loading: any) => {
+        loading.present()
+          let id = user?.uid || ''
+        this.fService.getUser(id).subscribe(userData=>{
+          this.user =userData
+          this.form.get('email')?.setValue(userData?.email)
+          this.form.get('registerType')?.setValue(userData?.registerType)
+          this.form.get('company')?.setValue(userData?.company)
+          this.form.get('location')?.setValue(userData?.location)
+          this.form.get('contact')?.setValue(userData?.contact)
+          this.form.get('name')?.setValue(userData?.name)
+          this.form.get('surname')?.setValue(userData?.surname)
+          this.form.get('openTime')?.setValue(userData?.openTime)
+          this.form.get('materials')?.setValue(userData?.materials)
+          //this.form.get('surname')?.setValue(userData?.surname)
+          //console.log('user',userData)
+          loading.dismiss()
+          this.fService.loading.dismiss()
+        })
       })
+      
     })
   }
   changePassword() {

@@ -41,29 +41,41 @@ export class StatsPage implements OnInit {
 
   ngOnInit() {
     this.fService.auth.onAuthStateChanged((user)=>{
-      let id = user?.uid || ''
-      if(!id){
-        this.nav.navigate(['login'],{replaceUrl:true})
-        return
-      }
-      this.fService.getUser(id).subscribe(userData=>{
-        
-        this.user =userData
-        if (userData && userData.registerType==='admin') {
-          this.nav.navigate(['admin','dashboard'],{replaceUrl:true})
+      this.fService.loading.create().then(loading=>{
+        loading.present()
+          let id = user?.uid || ''
+        if(!id){
+          this.fService.loading.dismiss()
+          loading.dismiss()
+          this.nav.navigate(['login'],{replaceUrl:true})
           return
         }
-        
+        this.fService.getUser(id).subscribe(userData=>{
+          
+          this.user =userData
+          if (userData && userData.registerType==='admin') {
+            loading.dismiss()
+            this.fService.loading.dismiss()
+            this.nav.navigate(['admin','dashboard'],{replaceUrl:true})
+            return
+          }
+          
+        })
+        this.fService.getRequests().subscribe(reqs=>{
+          let userRequests =reqs.filter(req=>req.userId===user?.uid)
+          this.requests={
+            total:userRequests.length,
+            pending:userRequests.filter(req=>req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()).length,
+            approved:userRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()).length,
+            cancelled:userRequests.filter(req=>req.status==='cancelled').length,
+          }
+          loading.dismiss()
+          this.fService.loading.dismiss()
+        })
+        loading.dismiss()
+        this.fService.loading.dismiss()
       })
-      this.fService.getRequests().subscribe(reqs=>{
-        let userRequests =reqs.filter(req=>req.userId===user?.uid)
-        this.requests={
-          total:userRequests.length,
-          pending:userRequests.filter(req=>req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()).length,
-          approved:userRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()).length,
-          cancelled:userRequests.filter(req=>req.status==='cancelled').length,
-        }
-      })
+      
     })
     this.getGuidelines()
     this.getTips()
