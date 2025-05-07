@@ -34,7 +34,7 @@ const routes: Routes = [
       loadChildren: () => import('./admin/profile/profile.module').then( m => m.ProfilePageModule)
     },
     {
-      path: 'feedback',
+      path: 'feedbacks',
       loadChildren: () => import('./admin/feedback/feedback.module').then( m => m.FeedbackPageModule)
     },
     {

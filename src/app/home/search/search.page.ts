@@ -31,6 +31,17 @@ export class SearchPage implements OnInit {
     approved:[],
     cancelled:[]
   }
+  recyclerRequests:{
+    all:any[],
+    today:any[],
+    upcoming:any[],
+    previous:any[]
+  } ={
+    all:[],
+    today:[],
+    upcoming:[],
+    previous:[]
+  }
   show = true
   constructor(private builder:FormBuilder, private fService: FirebaseService, private nav:Router) {
     this.form = this.builder.group({
@@ -61,30 +72,61 @@ export class SearchPage implements OnInit {
             loading.dismiss()
             this.fService.loading.dismiss()
           })
-          this.fService.getRequests().subscribe(reqs=>{
+          this.fService.getRequests().subscribe(requests=>{
             this.requests ={
               all:[],
               pending:[],
               approved:[],
               cancelled:[]
             }
-            reqs.filter(userReq=>userReq.userId===user?.uid).map(req=>{
-              this.fService.getUser(req.userId).subscribe(user=>{
-                this.fService.getUser(req.recyclerId).subscribe(recycler=>{
-                this.requests.all.push({...req,user,recycler})
-                if (req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()) {
-                  this.requests.pending.push({...req,user,recycler})
-                }
-                if (req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()) {
-                  this.requests.approved.push({...req,user,recycler})
-                }
-                if (req.status==='cancelled') {
-                  this.requests.cancelled.push({...req,user,recycler})
-                }
-                  
-                })
-              })
+            requests.map(req=>{
+              if (req.status==='pending' && new Date(req.requestDate).getTime()< Date.now()) {
+                this.fService.changeStatusRequest(req.id,'Expired')
+              }
+              return req
             })
+
+            let reqs = requests.sort((a,b)=>new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime())
+            if (this.user.registerType==='recycler') {
+                reqs.filter(userReq=>userReq.recyclerId===user?.uid).map(req=>{
+                this.fService.getUser(req.userId).subscribe(user=>{
+                  this.fService.getUser(req.recyclerId).subscribe(recycler=>{
+                  this.recyclerRequests.all.push({...req,user,recycler})
+                  if (req.status==='approved' && new Date(req.requestDate).toDateString() === new Date().toDateString()) {
+                    this.recyclerRequests.today.push({...req,user,recycler})
+                  }
+                  if (req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()) {
+                    this.recyclerRequests.upcoming.push({...req,user,recycler})
+                  }
+                  if (req.status==='approved' && new Date(req.requestDate).getTime()< Date.now()) {
+                    this.recyclerRequests.previous.push({...req,user,recycler})
+                  }
+                    
+                  })
+                })
+                return req
+              })
+            } else {
+                reqs.filter(userReq=>userReq.userId===user?.uid).map(req=>{
+                this.fService.getUser(req.userId).subscribe(user=>{
+                  this.fService.getUser(req.recyclerId).subscribe(recycler=>{
+                  this.requests.all.push({...req,user,recycler})
+                  if (req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()) {
+                    this.requests.pending.push({...req,user,recycler})
+                  }
+                  if (req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()) {
+                    this.requests.approved.push({...req,user,recycler})
+                  }
+                  if (req.status==='cancelled') {
+                    this.requests.cancelled.push({...req,user,recycler})
+                  }
+                    
+                  })
+                })
+                return req
+              })
+            }
+           
             
           })
         })
@@ -111,7 +153,15 @@ export class SearchPage implements OnInit {
     this.results = this.recyclers.filter((d) => d.location.toLowerCase().includes(query) || d.materials.map((m:string) =>(this.searchForm.get('materials')?.value)?.includes(m)).find((t:boolean)=>t===true) );
   }
 
-  handleMaterial(event:Event) {
+  handleMaterial(event:any) {
+    if ((typeof event) === 'string') {
+      this.fService.getUser(event || '').subscribe(user=>{
+      if (user) {
+        this.location = user
+      }
+    })
+      return
+    }
     const target = event.target as HTMLIonSearchbarElement;
     this.fService.getUser(target?.value || '').subscribe(user=>{
       if (user) {
@@ -120,9 +170,7 @@ export class SearchPage implements OnInit {
     })
 
   }
-  handleLocation() {
-
-  }
+  
   handleSubmit() {
     const {location:recyclerId,materials,requestDate} =this.form.value
     const data = {
@@ -136,4 +184,11 @@ export class SearchPage implements OnInit {
   changeShow() {
     this.show = !this.show
   }
+  handleLocation(recyclerId:string){
+    this.form.get('location')?.setValue(recyclerId)
+    this.searchForm.get('materials')?.setValue('')
+    this.searchForm.get('location')?.setValue('')
+    this.handleMaterial(recyclerId)
+  }
+  
 }

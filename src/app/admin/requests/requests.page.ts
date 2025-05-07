@@ -11,11 +11,13 @@ import { FirebaseService } from 'src/app/service/firebase.service';
 export class RequestsPage implements OnInit {
   user:any = {}
   requests:{
+    today:any[],
     all:any[],
     pending:any[],
     approved:any[],
     cancelled:any[]
   } ={
+    today:[],
     all:[],
     pending:[],
     approved:[],
@@ -39,14 +41,25 @@ export class RequestsPage implements OnInit {
             this.user =userData
             this.fService.loading.dismiss()
           })
-          this.fService.getRequests().subscribe(reqs=>{
+          this.fService.getRequests().subscribe(requests=>{
             this.requests ={
+              today:[],
               all:[],
               pending:[],
               approved:[],
               cancelled:[]
             }
-            reqs.map(req=>{
+            let reqs = requests.sort((a,b)=>new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime())
+            const d = reqs.map(req=>{
+              let passed = false
+              if (new Date(req.requestDate).getTime()< Date.now()) {
+                  passed = true
+                  req= {...req,passed}
+                }
+              if (req.status==='pending' && new Date(req.requestDate).getTime()< Date.now()) {
+                  
+                  req= {...req,status:'expired'}
+                }
               this.fService.getUser(req.userId).subscribe(user=>{
                 this.fService.getUser(req.recyclerId).subscribe(recycler=>{
                 this.requests.all.push({...req,user,recycler})
@@ -62,8 +75,8 @@ export class RequestsPage implements OnInit {
                   
                 })
               })
+              return req
             })
-            
           })
         })
         this.fService.loading.dismiss()

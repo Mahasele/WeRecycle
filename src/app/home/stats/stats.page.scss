@@ -1,10 +1,4 @@
-ion-toolbar {
-    ion-title {
-        color: #ffffff;
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-}
+
 ion-content {
     ion-grid {
         ion-card {
@@ -47,13 +41,13 @@ ion-card-content {
                 h3 {
                     font-size: 16px;
                     font-weight: 600;
-                    color: #eee;
+                    color: var(--ion-text-color-step-150);
                     margin-bottom: 4px;
                 }
 
                 p {
                     font-size: 14px;
-                    color: #666;
+                    color: var(--ion-text-color-step-400);
                     margin: 0;
                 }
             }

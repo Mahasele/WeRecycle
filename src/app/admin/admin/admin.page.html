@@ -1,64 +1,81 @@
-<app-toolbar [mainContent]="'main-event'"></app-toolbar>
-<div class="ion-page main" id="main-event">
-  <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>Admins</ion-title>
-      <ion-buttons slot="end">
-        <ion-menu-button color="light"></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
 
-    <ion-content [fullscreen]="true">
-    <form [formGroup]="form" (submit)="register()">
-      <ion-list>
-        <h2>Create Admin</h2>
-        <ion-col>
-          <ion-row>
-            <ion-input formControlName="name" placeholder="Full name" type="text" required></ion-input>
-          </ion-row>
-          <ion-row>
-            <div *ngIf="form.get('name')?.errors?.['required'] && form.get('name')?.touched">
-              <ion-text color="danger">Name is required.</ion-text>
-            </div>
-          </ion-row>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Admins</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+  <ion-content [fullscreen]="true">
+    <ion-button class="ion-margin-horizontal toggle" (click)="changeShow()"
+      expand="block"> {{show ?"Create Admin":"Admin list"}}
+    </ion-button>
+    <div *ngIf="show">
+      <h2>Available Admins</h2>
+    <ion-card class="ion-padding" *ngFor="let admin of admins">
+      <ion-col class="ion-no-padding">
+        <ion-col class="ion-no-margin ion-no-padding">
+          <ion-card-header class="ion-no-padding">{{`User name: ${admin.name}`}}</ion-card-header>
+          <ion-card-subtitle class="ion-no-padding">{{"Email: "+admin.email}}</ion-card-subtitle>
         </ion-col>
-        <ion-col>
-          <ion-row>
-            <ion-input type="email" formControlName="email" placeholder="Email" required></ion-input>
-          </ion-row>
-          <ion-row>
-            <div *ngIf="form.get('email')?.errors?.['required'] && form.get('email')?.touched">
-              <ion-text color="danger">Please enter email.</ion-text>
-            </div>
-            <div *ngIf="form.get('email')?.errors?.['email'] && form.get('email')?.touched">
-              <ion-text color="danger">Please enter a valid email.</ion-text>
-            </div>
-          </ion-row>
-        </ion-col>
-        <ion-col>
-          <ion-row>
-            <ion-input type="password" formControlName="password" placeholder="Password" required>
-              <ion-input-password-toggle *ngIf="form.get('password')?.value" slot="end"
-                color="success"></ion-input-password-toggle>
-            </ion-input>
-          </ion-row>
-          <ion-row>
-            <div *ngIf="form.get('password')?.errors?.['required'] && form.get('password')?.touched">
-              <ion-text color="danger">Please enter password.</ion-text>
-            </div>
-            <div *ngIf="form.get('password')?.errors?.['minlength'] && form.get('password')?.touched">
-              <ion-text color="danger">Password must be at least 8 characters long.</ion-text>
-            </div>
-          </ion-row>
-        </ion-col>
+        <div class="line"></div>
+        <ion-row class="ion-justify-content-start">
+          <ion-button expand="block" color="danger" (click)="delete(admin.id)">delete</ion-button>
+        </ion-row>
+      </ion-col>
+    </ion-card>
+    </div>
+  <form *ngIf="!show" [formGroup]="form" (submit)="register()">
+    <ion-list>
+      <h2>Create Admin</h2>
+      <ion-col>
+        <ion-row>
+          <ion-input formControlName="name" placeholder="Full name" type="text" required></ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('name')?.errors?.['required'] && form.get('name')?.touched">
+            <ion-text color="danger">Name is required.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-input type="email" formControlName="email" placeholder="Email" required></ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('email')?.errors?.['required'] && form.get('email')?.touched">
+            <ion-text color="danger">Please enter email.</ion-text>
+          </div>
+          <div *ngIf="form.get('email')?.errors?.['email'] && form.get('email')?.touched">
+            <ion-text color="danger">Please enter a valid email.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-input type="password" formControlName="password" placeholder="Password" required>
+            <ion-input-password-toggle *ngIf="form.get('password')?.value" slot="end"
+              color="success"></ion-input-password-toggle>
+          </ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('password')?.errors?.['required'] && form.get('password')?.touched">
+            <ion-text color="danger">Please enter password.</ion-text>
+          </div>
+          <div *ngIf="form.get('password')?.errors?.['minlength'] && form.get('password')?.touched">
+            <ion-text color="danger">Password must be at least 8 characters long.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
 
 
-      </ion-list>
-      <ion-button expand="block" type="submit" [disabled]="form.invalid">Sign up</ion-button>
-      
-    </form>
-  </ion-content>
-</div>
+    </ion-list>
+    <ion-button expand="block" type="submit" [disabled]="form.invalid">Sign up</ion-button>
+    
+  </form>
+</ion-content>
+
 
 

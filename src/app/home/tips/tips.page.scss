@@ -11,7 +11,7 @@ ion-content {
         --background: transparent;
         border: 2px solid var(--ion-color-success);
         border-radius: 30px;
-        color: #fff;
+        color: var(--ion-color-light-contrast);
         --box-shadow: none;
         margin-top: 24px;
         margin-bottom: 18px;
@@ -61,7 +61,7 @@ ion-content {
                     ion-card-title {
                         font-size: 18px;
                         font-weight: 600;
-                        color: #fff;
+                        color: var(--ion-color-light-contrast);
                     }
                 }
             }

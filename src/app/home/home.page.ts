@@ -22,7 +22,7 @@ export class HomePage {
   }
 
   goToSignin() {
-    this.router.navigate(['dashboard'])
+    this.router.navigate(['login'])
   }
   close(){
     this.menu.close('home')

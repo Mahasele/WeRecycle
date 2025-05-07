@@ -13,7 +13,55 @@
       <ion-button color="medium" (click)="logout()">Logout</ion-button>
     </ion-col>
   </ion-row>
-  <ion-grid>
+  <ion-grid *ngIf="user.registerType==='recycler'">
+    <h2 class="ion-no-margin ion-padding-horizontal">Your Stats</h2>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>All Recycling</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{recyclerRequests.total}}</h2>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Today Recycling</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{recyclerRequests.today}}</h2>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Upcoming Recycling</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{recyclerRequests.upcoming}}</h2>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Previous Recycling</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{recyclerRequests.previous}}</h2>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    
+  </ion-grid>
+  <ion-grid *ngIf="user.registerType==='user'">
     <h2 class="ion-no-margin ion-padding-horizontal">Your Stats</h2>
     <ion-row>
       <ion-col size="6">
@@ -60,97 +108,97 @@
       </ion-col>
     </ion-row>
     
-    </ion-grid>
-    <ion-grid>
-      <h2 class="ion-margin-top ion-padding-horizontal">More Info</h2>
-      <ion-row>
-        <ion-col size="12">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Frequently requested Location</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list>
-                <ion-item *ngFor="let center of donationCenters">
-                  <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
-                    <ion-col size="11" >
-                      <ion-label>
-                        <h3>{{ center.name }}</h3>
-                        <p>{{ center.address }}</p>
-                        <p>{{ center.distance }} miles away</p>
-                      </ion-label>
-                    </ion-col>
-                    <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
-                      <ion-icon name="chevron-forward-outline"></ion-icon>
-                    </ion-col>
-                  </ion-row>
-                  
-                </ion-item>
-              </ion-list>
-              <ion-text color="primary" class="forget">See more...</ion-text>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Recycling Guidelines</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list>
-                <ion-item *ngFor="let guide of guides">
-                  <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
-                    <ion-col size="11">
-                      <ion-label>
-                        <h3>How to dispose {{ guide.item }}</h3>
-                        <p>Made from {{ guide.material }}</p>
-                        <p>Created by {{ guide.name }}</p>
-                      </ion-label>
-                    </ion-col>
-                    <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
-                      <ion-icon name="chevron-forward-outline"></ion-icon>
-                    </ion-col>
-                  </ion-row>
-      
-                </ion-item>
-              </ion-list>
-              <ion-text color="primary" routerLink="/dashboard/guidelines" class="forget">See more...</ion-text>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12" style="margin-bottom:15px;">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Sustainability Tips</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list>
-                <ion-item *ngFor="let tip of tips">
-                  <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
-                    <ion-col size="11">
-                      <ion-label>
-                        <h3>{{ tip.title }}</h3>
-                        <p>Author: {{ tip.name }}</p>
-                        <p>Posted at: {{ tip.createdAt }}</p>
-                      </ion-label>
-                    </ion-col>
-                    <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
-                      <ion-icon name="chevron-forward-outline"></ion-icon>
-                    </ion-col>
-                  </ion-row>
-      
-                </ion-item>
-              </ion-list>
-              <ion-text color="primary" routerLink="/dashboard/tips" class="forget">See more...</ion-text>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-      
-      
-    </ion-grid>
+  </ion-grid>
+  <ion-grid>
+    <h2 class="ion-margin-top ion-padding-horizontal">More Info</h2>
+    <ion-row *ngIf="user.registerType !=='recycler' && recyclers.length>0">
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Frequently requested Location</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let center of recyclers">
+                <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
+                  <ion-col size="11" >
+                    <ion-label>
+                      <h3>Recycling Company: {{ center.company }}</h3>
+                      <p>Location: {{ center.location }}</p>
+                      <p>Operating on {{ `${center.days} at ${center.openTime}` }}</p>
+                    </ion-label>
+                  </ion-col>
+                  <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                  </ion-col>
+                </ion-row>
+                
+              </ion-item>
+            </ion-list>
+            <ion-text color="primary" class="forget">See more...</ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Recycling Guidelines</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let guide of guides">
+                <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
+                  <ion-col size="11">
+                    <ion-label>
+                      <h3>How to dispose {{ guide.item }}</h3>
+                      <p>Made from {{ guide.material }}</p>
+                      <p>Created by {{ guide.name }}</p>
+                    </ion-label>
+                  </ion-col>
+                  <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                  </ion-col>
+                </ion-row>
+    
+              </ion-item>
+            </ion-list>
+            <ion-text color="primary" routerLink="/dashboard/guidelines" class="forget">See more...</ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" style="margin-bottom:15px;">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Sustainability Tips</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let tip of tips">
+                <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
+                  <ion-col size="11">
+                    <ion-label>
+                      <h3>{{ tip.title }}</h3>
+                      <p>Author: {{ tip.name }}</p>
+                      <p>Posted at: {{ tip.createdAt }}</p>
+                    </ion-label>
+                  </ion-col>
+                  <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                  </ion-col>
+                </ion-row>
+    
+              </ion-item>
+            </ion-list>
+            <ion-text color="primary" routerLink="/dashboard/tips" class="forget">See more...</ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    
+    
+  </ion-grid>
 </ion-content>

@@ -1,15 +1,27 @@
-<app-toolbar [mainContent]="'feedbacks'" [menuId]="'feedbacksId'"></app-toolbar>
-<div class="ion-page main" id="feedbacks">
-  <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>Feedback</ion-title>
-      <ion-buttons slot="end">
-        <ion-menu-button color="light"></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
 
-  <ion-content [fullscreen]="true">
-  </ion-content>
-</div>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Feedback</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card class="ion-padding" *ngFor="let feed of testimonies">
+    <ion-col class="ion-no-padding">
+      <ion-col class="ion-no-margin ion-no-padding">
+        <ion-card-header class="ion-no-padding">Written by: {{feed.name}}</ion-card-header>
+        <ion-card-subtitle class="ion-no-padding ion-margin-top">Comment:</ion-card-subtitle>
+        <ion-card-content class="ion-no-padding">{{feed.comments}}</ion-card-content>
+      </ion-col>
+      <div class="line"></div>
+      <ion-row class="ion-justify-content-start">
+        <ion-button expand="block" color="danger" (click)="delete(feed.id)">delete</ion-button>
+      </ion-row>
+    </ion-col>
+  </ion-card>
+</ion-content>
+
 

@@ -1,14 +1,79 @@
-<app-toolbar [mainContent]="'main-content'"></app-toolbar>
-<div class="ion-page main" id="main-content">
-  <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>Profile</ion-title>
-      <ion-buttons slot="end">
-        <ion-menu-button color="light"></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-content [fullscreen]="true">
-  </ion-content>
-</div>
+<ion-content [fullscreen]="true">
+  <form [formGroup]="form" (submit)="updateProfile()">
+    <ion-list>
+      <h2>Your Profile</h2>
+      <ion-col>
+        <ion-row>
+          <ion-input formControlName="name" placeholder="Full name" type="text" required></ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('name')?.errors?.['required'] && form.get('name')?.touched">
+            <ion-text color="danger">Name is required.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-input type="email" formControlName="email" placeholder="Email" required></ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('email')?.errors?.['required'] && form.get('email')?.touched">
+            <ion-text color="danger">Please enter email.</ion-text>
+          </div>
+          <div *ngIf="form.get('email')?.errors?.['email'] && form.get('email')?.touched">
+            <ion-text color="danger">Please enter a valid email.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+
+
+    </ion-list>
+    <ion-button expand="block" type="submit" [disabled]="form.invalid">Save</ion-button>
+
+  </form>
+
+  <form [formGroup]="passwordForm" (submit)="changePassword()">
+    <ion-list>
+      <ion-list-header>Change Password</ion-list-header>
+      <ion-col>
+        <ion-row>
+          <ion-input type="password" formControlName="password" placeholder="Old Password" required>
+            <ion-input-password-toggle *ngIf="passwordForm.get('password')?.value" slot="end"
+              color="success"></ion-input-password-toggle>
+          </ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="passwordForm.get('password')?.errors?.['required'] && passwordForm.get('password')?.touched">
+            <ion-text color="danger">Please enter password.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-input type="password" formControlName="newPassword" placeholder="New Password" required>
+            <ion-input-password-toggle *ngIf="passwordForm.get('newPassword')?.value" slot="end"
+              color="success"></ion-input-password-toggle>
+          </ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="passwordForm.get('newPassword')?.errors?.['required'] && passwordForm.get('newPassword')?.touched">
+            <ion-text color="danger">Please enter password.</ion-text>
+          </div>
+          <div *ngIf="passwordForm.get('newPassword')?.errors?.['minlength'] && passwordForm.get('newPassword')?.touched">
+            <ion-text color="danger">Password must be at least 8 characters long.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+    </ion-list>
+    <ion-button expand="block" type="submit" [disabled]="passwordForm.invalid">Change</ion-button>
+  </form>
+</ion-content>

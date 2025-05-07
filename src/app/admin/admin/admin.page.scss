@@ -43,15 +43,16 @@ ion-content {
         height: 36px;
         border: none;
         --border-radius: 30px;
-    }
+    };
 
-    ;
-
-    .log {
-        display: flex;
-        justify-content: center;
-        font-size: 64px;
-        margin: 20px 0;
+    .toggle {
+        --background: transparent;
+        border: 2px solid var(--ion-color-success);
+        border-radius: 30px;
+        color: var(--ion-color-light-contrast);
+        --box-shadow: none;
+        margin-top: 24px;
+        margin-bottom: 18px;
     }
 
     ion-text {

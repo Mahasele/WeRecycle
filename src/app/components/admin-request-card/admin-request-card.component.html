@@ -1,0 +1,19 @@
+<ion-card class="ion-padding">
+  <ion-col class="ion-no-padding">
+    <ion-col class="ion-no-margin ion-no-padding">
+      <ion-card-header class="ion-no-padding"> Requested by: {{req.user.name || 'Holo'}}</ion-card-header>
+      <ion-card-subtitle class="ion-no-padding">{{"Recycling Company: "+req.recycler.company}}</ion-card-subtitle>
+      <ion-card-subtitle class="ion-no-padding">Location: {{req.recycler.location ||
+        'Qoaling'}}</ion-card-subtitle>
+      <ion-card-subtitle class="ion-no-padding">Date: {{req?.requestDate}}</ion-card-subtitle>
+    </ion-col>
+    <div class="line"></div>
+    <ion-row class="ion-justify-content-start">
+      <ion-button *ngIf="(req.status==='pending' || req.status==='approved') && !req.passed" expand="block" color="danger" (click)="changeStatus(req.id,'cancelled')">Cancel</ion-button>
+      <ion-button *ngIf="(req.status==='pending' || req.status==='cancelled') && !req.passed" expand="block" color="success" (click)="changeStatus(req.id,'approved')">Approve</ion-button>
+      
+      <ion-card-subtitle *ngIf="req.passed" expand="block" color="danger" [color]="req?.status==='approved'?'success':req?.status==='Cancelled'?'danger':'warning'">Status:
+        {{req?.status}}</ion-card-subtitle>
+    </ion-row>
+  </ion-col>
+</ion-card>

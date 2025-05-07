@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FirebaseService } from 'src/app/service/firebase.service';
 
 @Component({
   selector: 'app-users',
@@ -7,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   standalone:false
 })
 export class UsersPage implements OnInit {
-
-  constructor() { }
+  users:any[]=[]
+  constructor(private fService:FirebaseService) { }
 
   ngOnInit() {
+    this.fService.getUsers().subscribe(users=>this.users=users.filter(user=>user.registerType !== 'admin'))
   }
-
+  async delete(id:string) {
+    await this.fService.delete(id,'users')
+  }
 }

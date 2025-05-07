@@ -1,0 +1,27 @@
+ion-menu {
+    ion-content {
+        padding: 0;
+        margin: 0;
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-size: 1.2rem;
+            width: 100%;
+            padding: 0;
+
+            li {
+                list-style: none;
+                width: 100%;
+                padding: 8px 10px;
+            }
+
+            li:hover {
+                background-color: var(--ion-color-success);
+                transform: scale(1.1);
+                color: #fff;
+            }
+        }
+    }
+}

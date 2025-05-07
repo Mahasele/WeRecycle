@@ -1,90 +1,89 @@
-<app-toolbar [mainContent]="'tip'" [menuId]="'tipId'"></app-toolbar>
-<div class="ion-page main" id="tip">
-  <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>Sustainability Tips</ion-title>
-      <ion-buttons slot="end">
-        <ion-menu-button color="light"></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
 
 
-  <ion-content [fullscreen]="true">
-    <ion-button *ngIf="show==='full' || show==='new'" class="ion-margin-horizontal toggle" (click)="changeShow({},'list')" expand="block"> Show List
-    </ion-button>
-    <ion-button *ngIf="user?.registerType==='admin' && show==='list'" class="ion-margin-horizontal toggle" (click)="changeShow({},'new')" expand="block"> Create tip
-    </ion-button>
-    
-    <ion-list *ngIf="show==='list'">
-      <ion-item *ngFor="let tip of tips" class="ion-margin-bottom" (click)="changeShow(tip,'full')">
-        <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
-          <ion-col size="11">
-            <ion-label>
-              <h3>Title: {{ tip.title }}</h3>
-              <p>Created by: {{ tip?.name || 'none'}}</p>
-            </ion-label>
-          </ion-col>
-          <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </ion-col>
-        </ion-row>
-    
-      </ion-item>
-    </ion-list>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Sustainability Tips</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-    <ion-grid *ngIf="show==='full'" class="ion-no-padding">
-      <ion-row>
-        <ion-col size="12">
-          <h1>{{tip.title}}</h1>
-          <h3>{{'Made from '+tip.name}}</h3>
-          <ion-card class="ion-no-padding" >
-            <ion-card-header>
-              <ion-card-title>Detail</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <pre style="width: 100%;white-space: wrap;">
-                {{tip?.details}}
-              </pre>
-              <div class="ion-margin-top">
-                <a [href]="tip.articleHref">Check related Article</a>
-              </div>
-            </ion-card-content>
-          </ion-card>
+
+<ion-content [fullscreen]="true">
+  <ion-button *ngIf="show==='full' || show==='new'" class="ion-margin-horizontal toggle" (click)="changeShow({},'list')" expand="block"> Show List
+  </ion-button>
+  <ion-button *ngIf="user?.registerType==='admin' && show==='list'" class="ion-margin-horizontal toggle" (click)="changeShow({},'new')" expand="block"> Create tip
+  </ion-button>
+  
+  <ion-list *ngIf="show==='list'">
+    <ion-item *ngFor="let tip of tips" class="ion-margin-bottom" (click)="changeShow(tip,'full')">
+      <ion-row style="width: 100%;" class="ion-justify-between ion-align-items-center">
+        <ion-col size="11">
+          <ion-label>
+            <h3>Title: {{ tip.title }}</h3>
+            <p>Created by: {{ tip?.name || 'none'}}</p>
+          </ion-label>
+        </ion-col>
+        <ion-col size="1" class="ion-justify-content-center ion-align-items-center">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-col>
       </ion-row>
-    </ion-grid>
+  
+    </ion-item>
+  </ion-list>
 
-    <form [formGroup]="form" *ngIf="user?.registerType==='admin' && show==='new'" (ngSubmit)="createTip()">
-      <ion-list>
-        <ion-col>
-          <ion-row>
-            <ion-input type="text" formControlName="title" placeholder="Tip title" required></ion-input>
-          </ion-row>
-          <ion-row>
-            <div *ngIf="form.get('title')?.errors?.['required'] && form.get('title')?.touched">
-              <ion-text color="danger">Please enter title.</ion-text>
+  <ion-grid *ngIf="show==='full'" class="ion-no-padding">
+    <ion-row>
+      <ion-col size="12">
+        <h1>{{tip.title}}</h1>
+        <h3>{{'Made from '+tip.name}}</h3>
+        <ion-card class="ion-no-padding" >
+          <ion-card-header>
+            <ion-card-title>Detail</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <pre style="width: 100%;white-space: wrap;">
+              {{tip?.details}}
+            </pre>
+            <div class="ion-margin-top">
+              <a [href]="tip.articleHref">Check related Article</a>
             </div>
-          </ion-row>
-        </ion-col>
-        <ion-col>
-          <ion-row>
-            <ion-label>Tip Details</ion-label>
-            <ion-textarea placeholder="Details for Sorting" formControlName="details"></ion-textarea>
-          </ion-row>
-          <ion-row>
-            <div *ngIf="form.get('details')?.errors?.['required'] && form.get('details')?.touched">
-              <ion-text color="danger">Please enter tip details.</ion-text>
-            </div>
-          </ion-row>
-        </ion-col>
-        <ion-col>
-          <ion-row>
-            <ion-input type="text" formControlName="articleHref" placeholder="Enter external url" required></ion-input>
-          </ion-row>
-        </ion-col>
-      </ion-list>
-      <ion-button expand="block" type="submit" [disabled]="form.invalid">Create</ion-button>
-    </form>
-  </ion-content>
-</div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <form [formGroup]="form" *ngIf="user?.registerType==='admin' && show==='new'" (ngSubmit)="createTip()">
+    <ion-list>
+      <ion-col>
+        <ion-row>
+          <ion-input type="text" formControlName="title" placeholder="Tip title" required></ion-input>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('title')?.errors?.['required'] && form.get('title')?.touched">
+            <ion-text color="danger">Please enter title.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-label>Tip Details</ion-label>
+          <ion-textarea placeholder="Details for Sorting" formControlName="details"></ion-textarea>
+        </ion-row>
+        <ion-row>
+          <div *ngIf="form.get('details')?.errors?.['required'] && form.get('details')?.touched">
+            <ion-text color="danger">Please enter tip details.</ion-text>
+          </div>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-input type="text" formControlName="articleHref" placeholder="Enter external url" required></ion-input>
+        </ion-row>
+      </ion-col>
+    </ion-list>
+    <ion-button expand="block" type="submit" [disabled]="form.invalid">Create</ion-button>
+  </form>
+</ion-content>

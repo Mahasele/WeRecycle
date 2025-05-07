@@ -9,19 +9,7 @@ import { Router } from '@angular/router';
   standalone:false
 })
 export class StatsPage implements OnInit {
-  donationCenters = [
-    {
-      name: 'Maseru Private Hospital',
-      address: 'Ha Thetsane, Maseru',
-      distance: 2.5,
-    },
-    {
-      name: 'Queen Mamohato Memorial Hospital',
-      address: 'Kingsway road, Maseru',
-      distance: 4.1,
-    },
-    // Add more donation centers
-  ];
+  recyclers:any[] = [];
   guides:any = []
   tips:any = []
   user:any = {}
@@ -36,12 +24,24 @@ export class StatsPage implements OnInit {
     approved:0,
     cancelled:0
   }
+  recyclerRequests:{
+    total:Number,
+    today:Number,
+    upcoming:Number,
+    previous:Number
+  } ={
+    total:0,
+    today:0,
+    upcoming:0,
+    previous:0
+  }
   constructor(private fService: FirebaseService,private nav :Router) { 
   }
 
   ngOnInit() {
+    
     this.fService.auth.onAuthStateChanged((user)=>{
-      this.fService.loading.create().then(loading=>{
+      this.fService.loading.create().then(async(loading)=>{
         loading.present()
           let id = user?.uid || ''
         if(!id){
@@ -50,6 +50,7 @@ export class StatsPage implements OnInit {
           this.nav.navigate(['login'],{replaceUrl:true})
           return
         }
+        
         this.fService.getUser(id).subscribe(userData=>{
           
           this.user =userData
@@ -58,16 +59,28 @@ export class StatsPage implements OnInit {
             this.fService.loading.dismiss()
             this.nav.navigate(['admin','dashboard'],{replaceUrl:true})
             return
-          }
-          
+          } 
         })
-        this.fService.getRequests().subscribe(reqs=>{
-          let userRequests =reqs.filter(req=>req.userId===user?.uid)
-          this.requests={
-            total:userRequests.length,
-            pending:userRequests.filter(req=>req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()).length,
-            approved:userRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()).length,
-            cancelled:userRequests.filter(req=>req.status==='cancelled').length,
+         this.fService.getRequests().subscribe(reqs=>{
+          if (this.user.registerType==='recycler') {
+            let recyclerRequests =reqs.filter(req=>req.recyclerId===user?.uid)
+            this.recyclerRequests={
+              total:recyclerRequests.length,
+              today:recyclerRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).toDateString() === new Date().toDateString()).length,
+              upcoming:recyclerRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()).length,
+              previous:recyclerRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).getTime() < Date.now()).length,
+            }
+          } else {
+            let userRequests =reqs.filter(req=>req.userId===user?.uid)
+            this.mostFrequentElements(userRequests).map(id=>{
+              this.fService.getUser(id).subscribe(user=>this.recyclers.push({...user}))
+            })
+            this.requests={
+              total:userRequests.length,
+              pending:userRequests.filter(req=>req.status==='pending' && new Date(req.requestDate).getTime()> Date.now()).length,
+              approved:userRequests.filter(req=>req.status==='approved' && new Date(req.requestDate).getTime()> Date.now()).length,
+              cancelled:userRequests.filter(req=>req.status==='cancelled').length,
+            }
           }
           loading.dismiss()
           this.fService.loading.dismiss()
@@ -140,5 +153,20 @@ export class StatsPage implements OnInit {
   logout() {
     this.fService.logout()
   }
+  mostFrequentElements(data: any[]): any[] {
+      
+    
+const recyclerIds = data.map(item => item.recyclerId).filter(id => id !== undefined);
 
+
+const countMap:any = {};
+recyclerIds.forEach(id => {
+  countMap[id] = (countMap[id] || 0) + 1;
+});
+
+
+const result = Object.keys(countMap).filter(id => countMap[id] > 2);
+
+      return result;
+  }
 }

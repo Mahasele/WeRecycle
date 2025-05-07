@@ -1,27 +1,5 @@
-<ion-menu side="end" contentId="main-content" menuId="home">
-  <ion-header>
-    <ion-toolbar color="success">
-      <ion-title>
-        Menu
-      </ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="ion-padding">
-    <ul (click)="close()">
-      <li routerLink="/about">
-        About us
-      </li>
-      <li routerLink="/faq">
-        FAQ
-      </li>
-      <li>
-        Contact us
-      </li>
-    </ul>
-  </ion-content>
-</ion-menu>
-<div class="ion-page main" id="main-content">
-  <ion-header [translucent]="true">
+
+   <ion-header [translucent]="true">
     <ion-toolbar>
       <ion-row class="ion-align-items-center">
         <ion-col class="ion-no-padding">
@@ -39,7 +17,7 @@
   <ion-content [fullscreen]="true">
     <div class="hero1">
       <ion-row class="ion-justify-content-center">
-        <ion-icon size="large" name="trash"></ion-icon>
+        <ion-img size="large" src="../../assets/logo.webp"></ion-img>
         <h2>Recyclers app is a tool dedicated to connect recyclers with trash sellers and provide the with knowledge on how to dispose and recycle waste.
         </h2>
         <ion-col>
@@ -55,4 +33,4 @@
     <app-tasks></app-tasks>
     <app-testimonials></app-testimonials>
   </ion-content>
-</div>
+

@@ -1,14 +1,106 @@
-<app-toolbar [mainContent]="'event'" [menuId]="'event-id'"></app-toolbar>
-<div class="ion-page main" id="event">
-  <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>Events</ion-title>
-      <ion-buttons slot="end">
-        <ion-menu-button color="light"></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Events</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-content [fullscreen]="true">
-  </ion-content>
-</div>
+<ion-content>
+  <ion-button class="ion-margin-horizontal toggle" (click)="changeShow()" expand="block"> {{show ?"Create Event":"Events list"}}
+  </ion-button>
+  <div *ngIf="show">
+    <ion-segment value="upcoming" [scrollable]="true" class="ion-margin-top" color="success">
+      <ion-segment-button value="upcoming" contentId="upcoming">
+        <ion-label>Upcoming</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="previous" contentId="previous">
+        <ion-label>Previous</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <ion-segment-view>
+      <ion-segment-content id="upcoming">
+        <ion-card class="ion-padding" *ngFor="let event of events.upcoming">
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              <ion-card-header class="ion-no-padding">Title: {{event.title}}</ion-card-header>
+              <ion-card-header class="ion-no-padding">Posted by: {{event.host}}</ion-card-header>
+              <ion-card-subtitle class="ion-no-padding">Location: {{event.eventLocation}}</ion-card-subtitle>
+              <ion-card-content class="ion-no-padding">Event Date: {{event.eventDate}}</ion-card-content>
+            </ion-col>
+            <div class="line"></div>
+            <ion-row class="ion-justify-content-start">
+              <ion-button expand="block" color="danger" (click)="delete(event.id)">delete</ion-button>
+            </ion-row>
+          </ion-col>
+        </ion-card>
+      
+        <ion-card class="ion-padding" *ngIf="events.upcoming.length < 1">
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              No events just yet
+            </ion-col>
+          </ion-col>
+        </ion-card>
+      </ion-segment-content>
+      <ion-segment-content id="previous">
+        <ion-card class="ion-padding" *ngFor="let event of events.previous" >
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              <ion-card-header class="ion-no-padding">Title: {{event.title}}</ion-card-header>
+              <ion-card-header class="ion-no-padding">Posted by: {{event.host}}</ion-card-header>
+              <ion-card-subtitle class="ion-no-padding">Location: {{event.eventLocation}}</ion-card-subtitle>
+              <ion-card-content class="ion-no-padding">Event Date: {{event.eventDate}}</ion-card-content>
+            </ion-col>
+            <div class="line"></div>
+            <ion-row class="ion-justify-content-start">
+              <ion-button expand="block" color="danger" (click)="delete(event.id)">delete</ion-button>
+            </ion-row>
+          </ion-col>
+        </ion-card>
+      
+        <ion-card class="ion-padding" *ngIf="events.previous.length < 1">
+          <ion-col class="ion-no-padding">
+            <ion-col class="ion-no-margin ion-no-padding">
+              No events just yet
+            </ion-col>
+          </ion-col>
+        </ion-card>
+      </ion-segment-content>
+    </ion-segment-view>
+  </div>
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" *ngIf="!show">
+    <ion-grid class="ion-margin-top">
+      <ion-row>
+        <ion-col size="12">
+          <ion-label>Event title</ion-label>
+          <ion-input formControlName="title" placeholder="Title" type="text" required></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item lines="none">
+            <ion-label>Event date</ion-label><br>
+          </ion-item>
+          <ion-item>
+            <ion-datetime [min]="dateRestricter" formControlName="eventDate" required></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row>
+        <ion-col size="12">
+          <ion-label>Location</ion-label>
+          <ion-input formControlName="eventLocation" placeholder="Location" type="text" required></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" [disabled]="eventForm.invalid" expand="block">Create event</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+

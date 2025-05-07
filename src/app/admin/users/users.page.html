@@ -1,15 +1,25 @@
-<app-toolbar [mainContent]="'main-content'"></app-toolbar>
-<div class="ion-page main" id="main-content">
-  <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>Manage Users</ion-title>
-      <ion-buttons slot="end">
-        <ion-menu-button color="light"></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Manage Users</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-content [fullscreen]="true">
-  </ion-content>
-</div>
+<ion-content [fullscreen]="true">
+  <ion-card class="ion-padding" *ngFor="let user of users">
+    <ion-col class="ion-no-padding">
+      <ion-col class="ion-no-margin ion-no-padding">
+        <ion-card-header class="ion-no-padding">{{user.registerType === 'user'?`User name: ${user.name} ${user.surname}`: `Recycling company: ${user.company}`}}</ion-card-header>
+        <ion-card-subtitle class="ion-no-padding">{{"Email: "+user.email}}</ion-card-subtitle>
+        <ion-card-subtitle class="ion-no-padding">{{"Phone Number: "+user.contact}}</ion-card-subtitle>
+        <ion-card-subtitle class="ion-no-padding">{{"Role: "+user.registerType}}</ion-card-subtitle>
+        <ion-card-subtitle class="ion-no-padding">Location: {{user.location ||
+          'Qoaling'}}</ion-card-subtitle>
+      </ion-col>
+    </ion-col>
+  </ion-card>
+</ion-content>
+
 

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateEmail, updatePassword } from '@angular/fire/auth';
-import { addDoc, collection, collectionData, doc, docData, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { FirebaseError } from 'firebase/app';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class FirebaseService {
 
-  constructor(private firestore:Firestore, public auth:Auth, private ctl:AlertController, private nav:NavController, private tost:ToastController , public loading:LoadingController) { }
+  constructor(private firestore:Firestore, public auth:Auth, private ctl:AlertController, private nav:NavController, private tost:ToastController , public loading:LoadingController) {}
   register(data:any){
     const {name, surname, email, location, registerType, contact, password,company,materials,days,openTime} = data
     const userData = registerType === "user" ? {name, surname, email, location, registerType, contact}:registerType === "admin"?{name,email,registerType} :{company, email, location, registerType, contact,materials,days,openTime}
@@ -111,19 +111,20 @@ export class FirebaseService {
   logout() {
     signOut(this.auth).then((res: any) =>{
       //this.session=false
-      this.nav.navigateBack('/home')
+      this.nav.navigateBack('/home',{replaceUrl:true})
     }).catch((err: any )=>console.log('logError',err))
   }
   getUser(id:string):Observable <any>{
     try{
       //this.loading.create().then((loading: any) => loading.present())
       //setTimeout(() => this.loading.dismiss(), 2000)
+     // this.firestore1.collection('users').doc(id).valueChanges()
       return docData(doc(this.firestore,'users',id)) as Observable<any>;
     }catch(err:any){
       return new Observable(obs => {
         this.loading.dismiss()
         this.nav.navigateBack('/home')
-        obs.error(new Error('there is error'))
+        obs.error(new Error(err))
       })
     } 
   }
@@ -140,9 +141,8 @@ export class FirebaseService {
     
   }
   updateProfile(data:any,id:string) {
-    console.log(data)
-    const {name, surname, email, location, registerType, contact, openTime,company,materials,} = data
-    const userData = registerType === "user" ? {name, surname, email, location, contact}:{company, email, location, contact, openTime, materials}
+    const {name, surname, email, location, registerType, contact, openTime,company,materials,days} = data
+    const userData = registerType === "user" ? {name, surname, email, location, registerType, contact}:registerType === "admin"?{name,email} :{company, email, location, registerType, contact,materials,days,openTime}
     try {
         this.auth.onAuthStateChanged( async(user)=>{
               if(user?.uid === id ) {
@@ -243,6 +243,13 @@ export class FirebaseService {
       userId:id,
       createdAt: new Date()
     }).then(ref=>{
+      setDoc(ref,{
+      ...data,
+      userId:id,
+      id:ref.id,
+      status:'pending',
+      createdAt: new Date()
+    })
       this.tost.create({
         message: 'Feeback sent successfully',
         position: 'bottom',
@@ -374,4 +381,31 @@ export class FirebaseService {
   changeStatusRequest(requestId:string,status:string) { 
     updateDoc(doc(this.firestore, 'requests', requestId), { status })
   }
+  delete = async (docId:string,collection:string) => {
+      deleteDoc(doc(this.firestore,collection,docId)).then(ref=>{
+        console.log(ref)
+        this.tost.create({
+        message: (collection.substring(0,collection.length-1)).slice(0,1).toUpperCase()+(collection.substring(0,collection.length-1)).slice(1)+' deleted successfully',
+        position: 'bottom',
+        duration: 5000
+      }).then(e => e.present())
+      }).catch ((error:any) =>{
+      console.log(error)
+      this.tost.create({
+        message: error.message,
+        position: 'bottom',
+        duration: 5000
+      }).then(e => e.present())
+      return 'Failed to delete user'
+    })
+  }
+getUserdb = async (userId:string) => {
+  try {
+    const ref = await getDoc(doc(this.firestore,'users',userId)) 
+    return ref.data()
+  } catch (error) {
+    console.log(error)
+    return 'Failed to retrieve a user'
+  }
+}
 }

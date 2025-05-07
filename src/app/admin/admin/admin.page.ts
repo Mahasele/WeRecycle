@@ -13,6 +13,8 @@ export class AdminPage implements OnInit {
 
   form :FormGroup;
   user:any={}
+  admins:any[]=[]
+  show = true
   constructor(private builder: FormBuilder, private router: Router,private fService:FirebaseService) {
     this.form = this.builder.group({
       name: ['', Validators.required],
@@ -33,9 +35,11 @@ export class AdminPage implements OnInit {
           return
         }
         this.user =userData
+        this.fService.getUsers().subscribe(admins=>this.admins=admins.filter(admin=>admin.registerType==='admin'))
         this.fService.loading.dismiss()
       })
     })
+
     
   }
 
@@ -47,5 +51,10 @@ export class AdminPage implements OnInit {
     this.fService.register({...this.form.value,registerType:'admin'})
     this.form.reset()
   }
-
+  changeShow() {
+    this.show = !this.show
+  }
+  async delete(id:string) {
+    await this.fService.delete(id,'events')
+  }
 }

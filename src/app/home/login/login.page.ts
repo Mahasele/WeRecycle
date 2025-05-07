@@ -23,8 +23,6 @@ export class LoginPage implements OnInit{
     });}
 
   ngOnInit(): void {
-    console.log('state',this.nav.routerState)
-    this.fService.loading.dismiss()
   }
 
    async onSubmit() {
@@ -42,7 +40,8 @@ export class LoginPage implements OnInit{
     this.nav.navigate(["register"])
   }
   resetPassword() {
-    if (this.loginForm.get('email')?.valid) {
+    if (this.loginForm.get('email')?.valid) { 
+      this.fService.resetPassword(this.loginForm.get('email')?.value)
     }
   }
 

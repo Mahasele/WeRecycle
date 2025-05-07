@@ -30,34 +30,6 @@ export class RecyclersPage implements OnInit {
     this.fService.loading.dismiss()
   }
   ngOnInit(): void {
-    this.form.get('registerType')?.valueChanges.subscribe(() => {
-      if (this.form.getRawValue().registerType === 'user') {
-        this.form.get('company')?.clearValidators()
-        this.form.get('company')?.updateValueAndValidity()
-        this.form.get('openTime')?.clearValidators()
-        this.form.get('openTime')?.updateValueAndValidity()
-        this.form.get('materials')?.clearValidators()
-        this.form.get('materials')?.updateValueAndValidity()
-        this.form.get('name')?.setValidators(Validators.required)
-        this.form.get('name')?.updateValueAndValidity()
-        this.form.get('surname')?.setValidators(Validators.required)
-        this.form.get('surname')?.updateValueAndValidity()
-        this.form.updateValueAndValidity()
-    
-      } else {
-        this.form.get('name')?.clearValidators()
-        this.form.get('name')?.updateValueAndValidity()
-        this.form.get('surname')?.clearValidators()
-        this.form.get('surname')?.updateValueAndValidity()
-        this.form.get('company')?.setValidators(Validators.required)
-        this.form.get('company')?.updateValueAndValidity()
-        this.form.get('materials')?.setValidators(Validators.required)
-        this.form.get('materials')?.updateValueAndValidity()
-        this.form.get('openTime')?.setValidators(Validators.required)
-        this.form.get('openTime')?.updateValueAndValidity()
-        this.form.updateValueAndValidity()
-      }
-    })
     this.info()
     this.fService.loading.dismiss()
   }
@@ -69,11 +41,15 @@ export class RecyclersPage implements OnInit {
 
   info(){
     this.fService.auth.onAuthStateChanged((user)=>{
-      this.fService.loading.create().then((loading: any) => loading.present())
+      this.fService.loading.create().then((loading) => {
+        loading.present()
       let id = user?.uid || ''
       this.fService.getUser(id).subscribe(userData=>{
         this.user =userData
+        loading.dismiss()
         this.fService.loading.dismiss()
+      })
+      loading.dismiss()
       })
     })
   }

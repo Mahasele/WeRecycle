@@ -13,9 +13,9 @@ import { AlertController } from '@ionic/angular';
 export class EventsPage implements OnInit {
 
   eventForm:FormGroup
-  id
+  show = true
   dateRestricter
-  
+  events:{upcoming:any[],previous:any[]} = {upcoming:[],previous:[]}
   user:any={}
   constructor(private formBuilder: FormBuilder, private nav: Router,private alertCrl: AlertController,private fService:FirebaseService) {
     this.eventForm = this.formBuilder.group({
@@ -25,20 +25,13 @@ export class EventsPage implements OnInit {
     });
     this.dateRestricter = new Date().toString()
 
-    this.id = this.nav.url.slice(0, this.nav.url.lastIndexOf('/')).slice(this.nav.url.slice(0, this.nav.url.lastIndexOf('/')).lastIndexOf('/') + 1)
     let f = new Intl.DateTimeFormat('en-Us', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date()).split(' ')
-    console.log(f)
+  
     let year = f[0].split('/')[2] , month =f[0].split('/')[0], day = f[0].split('/')[1]
     
     let d = year+ '-' + month + '-' +day 
 
     this.dateRestricter = d.replace(',', '') + 'T' + f[1]
-    console.log(this.dateRestricter)
-    // if (this.id) {
-    //   this.fireService.getUser(this.id).subscribe(data => {
-    //     this.user = data
-    //   })
-    // }
   }
   ngOnInit() {
     this.fService.auth.onAuthStateChanged((user)=>{
@@ -63,6 +56,10 @@ export class EventsPage implements OnInit {
       })
       
     })
+    this.fService.getEvents().subscribe(events=>{
+      this.events.upcoming = events.filter(event=>new Date(event.eventDate).getTime()>Date.now())
+      this.events.previous = events.filter(event=>new Date(event.eventDate).getTime()<Date.now())
+    })
   }
  onSubmit(){
   if (this.eventForm.valid) {
@@ -70,5 +67,10 @@ export class EventsPage implements OnInit {
     this.eventForm.reset()
   }
  }
-
+ changeShow() {
+    this.show = !this.show
+  }
+  async delete(id:string) {
+    this.fService.delete(id,'events')
+  }
 }

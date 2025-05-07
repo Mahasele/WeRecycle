@@ -8,6 +8,7 @@ import { RequestsPageRoutingModule } from './requests-routing.module';
 
 import { RequestsPage } from './requests.page';
 import { SharedModule } from 'src/app/components/shared/shared.module';
+import { AdminRequestCardComponent } from 'src/app/components/admin-request-card/admin-request-card.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { SharedModule } from 'src/app/components/shared/shared.module';
     RequestsPageRoutingModule,
     SharedModule
   ],
-  declarations: [RequestsPage]
+  declarations: [RequestsPage,AdminRequestCardComponent]
 })
 export class RequestsPageModule {}
