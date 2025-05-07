@@ -56,6 +56,8 @@ export class FirebaseService {
             this.getUser(res.user?.uid).subscribe(user=>{
               if (user && user.registerType==='admin') {
                 this.nav.navigateForward(['/admin','dashboard'],{replaceUrl:true})
+                resolve(res.user)
+                return
               }
             })
             this.nav.navigateForward(['/dashboard','stats'],{replaceUrl:true})
@@ -111,7 +113,8 @@ export class FirebaseService {
   logout() {
     signOut(this.auth).then((res: any) =>{
       //this.session=false
-      this.nav.navigateBack('/home',{replaceUrl:true})
+      this.nav.navigateBack('/home')
+      return
     }).catch((err: any )=>console.log('logError',err))
   }
   getUser(id:string):Observable <any>{

@@ -151,6 +151,7 @@ export class StatsPage implements OnInit {
   })
   }
   logout() {
+    this.user={}
     this.fService.logout()
   }
   mostFrequentElements(data: any[]): any[] {
